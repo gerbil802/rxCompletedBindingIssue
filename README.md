@@ -12,5 +12,5 @@ The button ran this code:
 ```
         let d = PublishSubject<AppInput>()
         self.c.amb(d).take(1).bindTo(self.vm.appInput).disposed(by: self.bag)
-        d.onNext(.showOptions)
+        d.onNext(.showOptions) // Completes D. vm.appInput is completed as well.
 ```
