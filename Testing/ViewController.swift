@@ -30,6 +30,7 @@ class ViewController: NSViewController, NSMenuDelegate {
             }
             switch element {
             case .options:
+                self.showAlert()
                 break
             default:
                 break
@@ -42,10 +43,11 @@ class ViewController: NSViewController, NSMenuDelegate {
         let d = PublishSubject<AppInput>()
         self.c.amb(d).take(1).bindTo(self.vm.appInput).disposed(by: self.bag)
         d.onNext(.showOptions)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [unowned self] in
-            self.a.onNext(.didHideOptions) // This no longer goes through
-        }
-
+    }
+    
+    func showAlert() {
+        let alert = NSAlert()
+        alert.beginSheetModal(for: self.view.window!)
     }
 }
 
