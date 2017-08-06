@@ -7,21 +7,45 @@
 //
 
 import Cocoa
+import RxSwift
+import RxCocoa
 
-class ViewController: NSViewController {
-
+class ViewController: NSViewController, NSMenuDelegate {
+    
+    var vm = ViewModel()
+    var bag = DisposeBag()
+    
+    let a = PublishSubject<AppInput>()
+    let b = PublishSubject<AppInput>()
+    let c = PublishSubject<AppInput>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        Observable.of(a,b).merge().bindTo(vm.appInput).disposed(by: bag)
+        
+        self.vm.appState.subscribe{ event in
+            guard let element = event.element else {
+                return
+            }
+            switch element {
+            case .options:
+                break
+            default:
+                break
+            }
+        }.disposed(by: bag)
+        
     }
 
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
+    @IBAction func action(_ sender: Any) {
+        let d = PublishSubject<AppInput>()
+        self.c.amb(d).take(1).bindTo(self.vm.appInput).disposed(by: self.bag)
+        d.onNext(.showOptions)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [unowned self] in
+            self.a.onNext(.didHideOptions) // This no longer goes through
         }
+
     }
-
-
 }
 
