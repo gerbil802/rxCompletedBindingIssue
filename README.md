@@ -1,5 +1,7 @@
 # rxCompletedBindingIssue
 
+This repository reproduces an issue where a later binding stream which has completed causes the initial binding to be "completed" as well.
+
 1. Run the app.
 2. Click the button. 
 3. Click the button again - no response.
